@@ -134,8 +134,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="pawn.cpp" />
-    <ClCompile Include="pawn.h" />
-    <ClCompile Include="piece.h" />
     <ClCompile Include="queen.cpp" />
     <ClCompile Include="rook.cpp" />
   </ItemGroup>
@@ -148,6 +146,9 @@
     <ClInclude Include="king.h" />
     <ClInclude Include="knight.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="pawn.h" />
+    <ClInclude Include="piece.h" />
+    <ClInclude Include="position.h" />
     <ClInclude Include="queen.h" />
     <ClInclude Include="rook.h" />
     <ClInclude Include="shared.h" />

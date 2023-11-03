@@ -42,11 +42,11 @@ Chess::Board::Board()
 
 Chess::Board::~Board()
 {
-    /*for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             free(mBoard[i][j]);
         }
-    }*/
+    }
 }
 
 void Chess::Board::Display()
@@ -67,13 +67,17 @@ void Chess::Board::Display()
     std::cout << std::setw(10) << "abcdefgh" << std::endl;
 }
 
-Chess::Piece* Chess::Board::GetPiece(Pos pos)
+Chess::Piece* Chess::Board::GetPiece(const Position& pos)
 {
-    return mBoard[pos.row][pos.col];
+    if (pos.mRank < 'a' || pos.mRank > 'h' || pos.mFile < '1' || pos.mFile > '8') {
+        return nullptr;
+    }
+
+    return mBoard[pos.GetRow()][pos.GetColumn()];
 }
 
-void Chess::Board::MovePiece(Pos current, Pos target)
+void Chess::Board::MovePiece(Position current, Position target)
 {
-    mBoard[target.row][target.col] = mBoard[current.row][current.col];
-    mBoard[current.row][current.col] = nullptr;
+    mBoard[target.GetRow()][target.GetColumn()] = mBoard[current.GetRow()][current.GetColumn()];
+    mBoard[current.GetRow()][current.GetColumn()] = nullptr;
 }

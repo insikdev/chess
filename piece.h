@@ -1,21 +1,10 @@
 #pragma once
 
+#include "position.h"
 #include "shared.h"
 
 namespace Chess {
-enum class ePieceColor {
-    WHITE,
-    BLACK
-};
-
-enum class ePieceType {
-    KING,
-    QUEEN,
-    BISHOP,
-    KNIGHT,
-    ROOK,
-    PAWN
-};
+class Board;
 
 class Piece {
 public:
@@ -34,11 +23,12 @@ public:
         return mColor;
     };
 
-    // virtual bool CanMove(Pos current, Pos target);
+    virtual bool IsValidMove(Board& board, Position current, Position target) = 0;
 
-private:
+protected:
     const ePieceType mType;
     const ePieceColor mColor;
     const wchar_t mUnicodePoint;
+    bool mHasMoved { false };
 };
 }

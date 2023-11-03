@@ -1,4 +1,5 @@
 #include "manager.h"
+#include "piece.h"
 #include <iostream>
 #include <string>
 
@@ -16,9 +17,9 @@ void Chess::Manager::Run()
 int Chess::Manager::GetNextMove()
 {
     std::string input;
-    Pos currentPos;
-    Pos targetPos;
-    Chess::Piece* currentPiece;
+    Position currentPos;
+    Position targetPos;
+    Piece* currentPiece;
 
     std::cout << std::endl;
     std::cout << (mCurrentPlayer == ePieceColor::WHITE ? "백" : "흑") << "의 차례입니다." << std::endl;
@@ -27,7 +28,7 @@ int Chess::Manager::GetNextMove()
         std::cout << "움직일 기물의 좌표 : ";
         std::getline(std::cin, input);
 
-        if (Utility::TryConvertToPos(input, &currentPos) == false) {
+        if (currentPos.GetPositionFromInput(input) == false) {
             std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
             continue;
         };
@@ -51,14 +52,17 @@ int Chess::Manager::GetNextMove()
         std::cout << "기물이 이동할 좌표 : ";
         std::getline(std::cin, input);
 
-        if (Utility::TryConvertToPos(input, &targetPos) == false) {
+        if (targetPos.GetPositionFromInput(input) == false) {
             std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
             continue;
         };
 
-        // 선택한 기물이 지정한 위치로 움직일 수 있는지 확인하는 함수
-        mBoard.MovePiece(currentPos, targetPos);
-        break;
+        if (currentPiece->IsValidMove(mBoard, currentPos, targetPos)) {
+            mBoard.MovePiece(currentPos, targetPos);
+            break;
+        } else {
+            std::cout << "해당 좌표로 움직일 수 없습니다." << std::endl;
+        }
     }
 
     mCurrentPlayer = mCurrentPlayer == ePieceColor::WHITE ? ePieceColor::BLACK : ePieceColor::WHITE;
