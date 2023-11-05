@@ -5,7 +5,8 @@ Chess::Queen::Queen(const Chess::ePieceColor color)
 {
 }
 
-bool Chess::Queen::IsValidMove(Board& board, Position current, Position target)
+std::vector<Chess::Position> Chess::Queen::GetPossiblePositions(Board& board, const Position current)
 {
-    return true;
+    std::vector<Position> possiblePositions;
+    return possiblePositions;
 }

@@ -7,9 +7,9 @@ Chess::Pawn::Pawn(const Chess::ePieceColor color)
 {
 }
 
-bool Chess::Pawn::IsValidMove(Board& board, const Position current, const Position target)
+std::vector<Chess::Position> Chess::Pawn::GetPossiblePositions(Board& board, const Position current)
 {
-    std::vector<Position> validMoves;
+    std::vector<Position> possiblePositions;
 
     int forward = (mColor == ePieceColor::WHITE) ? 1 : -1;
 
@@ -18,29 +18,23 @@ bool Chess::Pawn::IsValidMove(Board& board, const Position current, const Positi
     Position diagonalLeft = Position::Move(current, -1, forward);
     Position diagonalRight = Position::Move(current, 1, forward);
 
-    if (board.GetPiece(forwardOne) == nullptr) {
-        validMoves.push_back(forwardOne);
-        if (!mHasMoved && board.GetPiece(forwardTwo) == nullptr) {
-            validMoves.push_back(forwardTwo);
+    if (board.GetPieceOrNull(forwardOne) == nullptr) {
+        possiblePositions.push_back(forwardOne);
+        if (!mHasMoved && board.GetPieceOrNull(forwardTwo) == nullptr) {
+            possiblePositions.push_back(forwardTwo);
         }
     }
 
-    Piece* diagonalLeftPiece = board.GetPiece(Position::Move(current, -1, forward));
-    Piece* diagonalRightPiece = board.GetPiece(Position::Move(current, 1, forward));
+    Piece* diagonalLeftPiece = board.GetPieceOrNull(Position::Move(current, -1, forward));
+    Piece* diagonalRightPiece = board.GetPieceOrNull(Position::Move(current, 1, forward));
 
     if (diagonalLeftPiece != nullptr && diagonalLeftPiece->GetColor() != mColor) {
-        validMoves.push_back(diagonalLeft);
+        possiblePositions.push_back(diagonalLeft);
     }
 
     if (diagonalRightPiece != nullptr && diagonalRightPiece->GetColor() != mColor) {
-        validMoves.push_back(diagonalRight);
+        possiblePositions.push_back(diagonalRight);
     }
 
-    for (const Position& move : validMoves) {
-        if (move == target) {
-            return true;
-        }
-    }
-
-    return false;
+    return possiblePositions;
 }

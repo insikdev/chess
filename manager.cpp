@@ -6,23 +6,35 @@
 void Chess::Manager::Run()
 {
     while (1) {
-        std::cout << "\033[2J\033[1;1H";
-        mBoard.Display();
-        GetNextMove();
-        std::cout << "계속하려면 아무키나 누르세요..." << std::endl;
-        std::cin.get();
+        SetupBeforeTurn();
+        SelectPiece();
+        CleanupAfterTurn();
     }
 }
 
-int Chess::Manager::GetNextMove()
+void Chess::Manager::SetupBeforeTurn()
 {
-    std::string input;
-    Position currentPos;
-    Position targetPos;
-    Piece* currentPiece;
-
+    mSelectedPiece = nullptr;
+    std::cout << "\033[2J\033[1;1H";
+    mBoard.Display();
     std::cout << std::endl;
     std::cout << (mCurrentPlayer == ePieceColor::WHITE ? "백" : "흑") << "의 차례입니다." << std::endl;
+}
+
+void Chess::Manager::CleanupAfterTurn()
+{
+    std::cout << "계속하려면 아무키나 누르세요..." << std::endl;
+    std::cin.get();
+
+    mCurrentPlayer = mCurrentPlayer == ePieceColor::WHITE ? ePieceColor::BLACK : ePieceColor::WHITE;
+}
+
+void Chess::Manager::SelectPiece()
+{
+    std::string input;
+    std::vector<Position> positions;
+    Position currentPos;
+    Position targetPos;
 
     while (true) {
         std::cout << "움직일 기물의 좌표 : ";
@@ -33,15 +45,21 @@ int Chess::Manager::GetNextMove()
             continue;
         };
 
-        currentPiece = mBoard.GetPiece(currentPos);
+        mSelectedPiece = mBoard.GetPieceOrNull(currentPos);
 
-        if (currentPiece == nullptr) {
+        if (mSelectedPiece == nullptr) {
             std::cout << "해당 좌표에 기물이 존재하지 않습니다.\n";
             continue;
         }
 
-        if (currentPiece->GetColor() != mCurrentPlayer) {
+        if (mSelectedPiece->GetColor() != mCurrentPlayer) {
             std::cout << "내가 소유한 기물이 아닙니다.\n";
+            continue;
+        }
+
+        positions = mSelectedPiece->GetPossiblePositions(mBoard, currentPos);
+        if (positions.empty()) {
+            std::cout << "해당 기물은 현재 움직일 수 없습니다." << std::endl;
             continue;
         }
 
@@ -57,14 +75,11 @@ int Chess::Manager::GetNextMove()
             continue;
         };
 
-        if (currentPiece->IsValidMove(mBoard, currentPos, targetPos)) {
+        if (mSelectedPiece->IsValidMove(positions, targetPos)) {
             mBoard.MovePiece(currentPos, targetPos);
             break;
         } else {
             std::cout << "해당 좌표로 움직일 수 없습니다." << std::endl;
         }
     }
-
-    mCurrentPlayer = mCurrentPlayer == ePieceColor::WHITE ? ePieceColor::BLACK : ePieceColor::WHITE;
-    return 0;
 }

@@ -2,17 +2,18 @@
 
 #include "board.h"
 #include "shared.h"
-#include <vector>
 
 namespace Chess {
 class Manager {
 public:
     void Run(void);
-    int GetNextMove();
+    void SetupBeforeTurn(void);
+    void SelectPiece(void);
+    void CleanupAfterTurn(void);
 
 private:
     Board mBoard;
     ePieceColor mCurrentPlayer { ePieceColor::WHITE };
-    // std::vector<int> mChessNotation;
+    Piece* mSelectedPiece {};
 };
 }

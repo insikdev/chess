@@ -67,7 +67,7 @@ void Chess::Board::Display()
     std::cout << std::setw(10) << "abcdefgh" << std::endl;
 }
 
-Chess::Piece* Chess::Board::GetPiece(const Position& pos)
+Chess::Piece* Chess::Board::GetPieceOrNull(const Position& pos)
 {
     if (pos.mRank < 'a' || pos.mRank > 'h' || pos.mFile < '1' || pos.mFile > '8') {
         return nullptr;

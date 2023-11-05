@@ -64,6 +64,11 @@ public:
         return Position { pos.mRank + dx, pos.mFile + dy };
     }
 
+    static bool IsValid(const Position& pos)
+    {
+        return pos.mRank >= 'a' && pos.mRank <= 'h' && pos.mFile >= '1' && pos.mFile <= '8';
+    }
+
 public:
     char mRank;
     char mFile;

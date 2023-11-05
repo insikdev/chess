@@ -2,6 +2,7 @@
 
 #include "position.h"
 #include "shared.h"
+#include <vector>
 
 namespace Chess {
 class Board;
@@ -13,17 +14,30 @@ public:
         , mColor { color }
         , mUnicodePoint { unicodePoint } {};
 
-    const wchar_t GetUnicodePoint()
+    inline const wchar_t GetUnicodePoint()
     {
         return mUnicodePoint;
     }
 
-    const ePieceColor GetColor()
+    inline const ePieceColor GetColor()
     {
         return mColor;
     };
 
-    virtual bool IsValidMove(Board& board, Position current, Position target) = 0;
+    // virtual bool IsValidMove(Board& board, Position current, Position target) = 0;
+
+    virtual std::vector<Position> GetPossiblePositions(Board& board, const Position current) = 0;
+
+    bool IsValidMove(std::vector<Position>& possiblePositions, const Position target)
+    {
+        for (const Position& p : possiblePositions) {
+            if (p == target) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 protected:
     const ePieceType mType;

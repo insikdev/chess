@@ -9,7 +9,7 @@ public:
     Board(void);
     ~Board();
     void Display(void);
-    Piece* GetPiece(const Position&);
+    Piece* GetPieceOrNull(const Position&);
     void MovePiece(Position, Position);
 
 private:
