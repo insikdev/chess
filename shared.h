@@ -14,4 +14,10 @@ enum class ePieceType {
     ROOK,
     PAWN
 };
+
+enum class eStatus {
+    PLAYING,
+    CHECK,
+    CHECKMATE,
+};
 }

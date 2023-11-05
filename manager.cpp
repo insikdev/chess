@@ -3,38 +3,42 @@
 #include <iostream>
 #include <string>
 
-void Chess::Manager::Run()
+using namespace Chess;
+
+void Manager::Init(void)
+{
+    std::wcout.imbue(std::locale(""));
+    mWhite.InitPieces(mBoard);
+    mBlack.InitPieces(mBoard);
+}
+
+void Manager::Run(void)
 {
     while (1) {
         SetupBeforeTurn();
-        SelectPiece();
+        MainTurn();
         CleanupAfterTurn();
     }
 }
 
-void Chess::Manager::SetupBeforeTurn()
+void Manager::SetupBeforeTurn(void)
 {
-    mSelectedPiece = nullptr;
     std::cout << "\033[2J\033[1;1H";
     mBoard.Display();
     std::cout << std::endl;
-    std::cout << (mCurrentPlayer == ePieceColor::WHITE ? "백" : "흑") << "의 차례입니다." << std::endl;
+    std::cout << (GetCurrentPlayer().GetColor() == ePieceColor::WHITE ? "백" : "흑") << "의 차례입니다." << std::endl;
+
+    mWhite.UpdateAvailablePositions(mBoard);
+    mBlack.UpdateAvailablePositions(mBoard);
 }
 
-void Chess::Manager::CleanupAfterTurn()
-{
-    std::cout << "계속하려면 아무키나 누르세요..." << std::endl;
-    std::cin.get();
-
-    mCurrentPlayer = mCurrentPlayer == ePieceColor::WHITE ? ePieceColor::BLACK : ePieceColor::WHITE;
-}
-
-void Chess::Manager::SelectPiece()
+void Manager::MainTurn(void)
 {
     std::string input;
     std::vector<Position> positions;
     Position currentPos;
     Position targetPos;
+    Piece* mSelectedPiece;
 
     while (true) {
         std::cout << "움직일 기물의 좌표 : ";
@@ -52,12 +56,13 @@ void Chess::Manager::SelectPiece()
             continue;
         }
 
-        if (mSelectedPiece->GetColor() != mCurrentPlayer) {
+        if (mSelectedPiece->GetColor() != GetCurrentPlayer().GetColor()) {
             std::cout << "내가 소유한 기물이 아닙니다.\n";
             continue;
         }
 
-        positions = mSelectedPiece->GetPossiblePositions(mBoard, currentPos);
+        positions = GetCurrentPlayer().GetPositionMap()[currentPos.ToString()];
+
         if (positions.empty()) {
             std::cout << "해당 기물은 현재 움직일 수 없습니다." << std::endl;
             continue;
@@ -83,3 +88,39 @@ void Chess::Manager::SelectPiece()
         }
     }
 }
+
+void Manager::CleanupAfterTurn()
+{
+    /* if (IsCheck(mCurrentPlayer)) {
+         std::cout << "체크입니다." << std::endl;
+         mState = eStatus::CHECK;
+     } else {
+         mState = eStatus::PLAYING;
+     }*/
+
+    mTurn++;
+    std::cout << "계속하려면 아무키나 누르세요..." << std::endl;
+    std::cin.get();
+}
+
+// bool Chess::Manager::IsCheck(ePieceColor currentPlayer)
+//{
+//     ePieceColor opponentColor = currentPlayer == ePieceColor::WHITE ? ePieceColor::BLACK : ePieceColor::WHITE;
+//
+//     /*std::vector<Piece*> alivePieces = mBoard.GetAlivePieces(currentPlayer);*/
+//     std::vector<Piece*> alivePieces = mCurrentPlayer->GetAllPiecesGetAllPieces();
+//     Position opponentKingPos = mBoard.GetKingPosition(opponentColor);
+//
+//     for (auto* piece : alivePieces) {
+//         Position currentPos = mBoard.GetPosition(piece);
+//         std::vector<Position> allPos = piece->GetPossiblePositions(mBoard, currentPos);
+//
+//         for (auto& p : allPos) {
+//             if (p == opponentKingPos) {
+//                 return true;
+//             }
+//         }
+//     }
+//
+//     return false;
+// }

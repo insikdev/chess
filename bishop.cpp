@@ -1,13 +1,14 @@
 #include "bishop.h"
 #include "board.h"
-#include <vector>
 
-Chess::Bishop::Bishop(const Chess::ePieceColor color)
-    : Piece(ePieceType::BISHOP, color, color == Chess::ePieceColor::BLACK ? L'\u265D' : L'\u2657')
+using namespace Chess;
+
+Bishop::Bishop(ePieceColor color)
+    : Piece(ePieceType::BISHOP, color, color == ePieceColor::BLACK ? L'\u265D' : L'\u2657')
 {
 }
 
-std::vector<Chess::Position> Chess::Bishop::GetPossiblePositions(Board& board, const Position current)
+std::vector<Position> Bishop::GetPossiblePositions(Board& board, const Position& current)
 {
     std::vector<Position> possiblePositions;
 

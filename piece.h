@@ -9,34 +9,25 @@ class Board;
 
 class Piece {
 public:
-    Piece(ePieceType type, ePieceColor color, wchar_t unicodePoint)
-        : mType { type }
-        , mColor { color }
-        , mUnicodePoint { unicodePoint } {};
+    Piece(ePieceType type, ePieceColor color, wchar_t unicodePoint);
+    virtual std::vector<Position> GetPossiblePositions(Board& board, const Position& current) = 0;
 
-    inline const wchar_t GetUnicodePoint()
+    bool IsValidMove(std::vector<Position>& possiblePositions, const Position target); // TODO: 이동 필요
+
+public:
+    inline ePieceType GetType() const
     {
-        return mUnicodePoint;
+        return mType;
     }
 
-    inline const ePieceColor GetColor()
+    inline ePieceColor GetColor() const
     {
         return mColor;
-    };
+    }
 
-    // virtual bool IsValidMove(Board& board, Position current, Position target) = 0;
-
-    virtual std::vector<Position> GetPossiblePositions(Board& board, const Position current) = 0;
-
-    bool IsValidMove(std::vector<Position>& possiblePositions, const Position target)
+    inline wchar_t GetUnicodePoint() const
     {
-        for (const Position& p : possiblePositions) {
-            if (p == target) {
-                return true;
-            }
-        }
-
-        return false;
+        return mUnicodePoint;
     }
 
 protected:

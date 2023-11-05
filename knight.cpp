@@ -1,12 +1,14 @@
 #include "knight.h"
 #include "board.h"
 
-Chess::Knight::Knight(const Chess::ePieceColor color)
-    : Piece(ePieceType::KNIGHT, color, color == Chess::ePieceColor::BLACK ? L'\u265E' : L'\u2658')
+using namespace Chess;
+
+Knight::Knight(ePieceColor color)
+    : Piece(ePieceType::KNIGHT, color, color == ePieceColor::BLACK ? L'\u265E' : L'\u2658')
 {
 }
 
-std::vector<Chess::Position> Chess::Knight::GetPossiblePositions(Board& board, const Position current)
+std::vector<Position> Knight::GetPossiblePositions(Board& board, const Position& current)
 {
     std::vector<Position> possiblePositions;
 
@@ -15,6 +17,7 @@ std::vector<Chess::Position> Chess::Knight::GetPossiblePositions(Board& board, c
 
     for (int i = 0; i < 8; ++i) {
         Position pos = Position::Move(current, dx[i], dy[i]);
+
         if (Position::IsValid(pos)) {
             Piece* piece = board.GetPieceOrNull(pos);
             if (piece == nullptr || piece->GetColor() != mColor) {
