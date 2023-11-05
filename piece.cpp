@@ -8,14 +8,3 @@ Piece::Piece(ePieceType type, ePieceColor color, wchar_t unicodePoint)
     , mUnicodePoint { unicodePoint }
 {
 }
-
-bool Piece::IsValidMove(std::vector<Position>& possiblePositions, const Position target)
-{
-    for (const auto& p : possiblePositions) {
-        if (p == target) {
-            return true;
-        }
-    }
-
-    return false;
-}

@@ -22,9 +22,9 @@ void Player::InitPieces(Board& board)
     const char backRank = mColor == ePieceColor::WHITE ? '1' : '8';
 
     std::vector<std::pair<Position, Piece*>> pieces;
-    for (char i = 0; i < 8; ++i) {
-        pieces.push_back(std::make_pair(Position { 'a' + i, pawnRank }, new Pawn { mColor }));
-    }
+    // for (char i = 0; i < 8; ++i) {
+    //     pieces.push_back(std::make_pair(Position { 'a' + i, pawnRank }, new Pawn { mColor }));
+    // }
 
     pieces.push_back(std::make_pair(Position { 'a', backRank }, new Rook { mColor }));
     pieces.push_back(std::make_pair(Position { 'b', backRank }, new Knight { mColor }));
@@ -41,17 +41,14 @@ void Player::InitPieces(Board& board)
     }
 }
 
-Position Player::GetKingPosition(void) const
+Position Player::GetKingPosition(Board& board) const
 {
-    Piece* king;
     for (auto* p : mPieces) {
         if (p->GetType() == ePieceType::KING) {
-            king = p;
-            break;
+            return board.GetPosition(p);
         }
     }
 
-    // TODO: Piece*를 Position으로 변환
     return Position {};
 }
 

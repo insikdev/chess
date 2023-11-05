@@ -12,8 +12,6 @@ public:
     Piece(ePieceType type, ePieceColor color, wchar_t unicodePoint);
     virtual std::vector<Position> GetPossiblePositions(Board& board, const Position& current) = 0;
 
-    bool IsValidMove(std::vector<Position>& possiblePositions, const Position target); // TODO: 이동 필요
-
 public:
     inline ePieceType GetType() const
     {

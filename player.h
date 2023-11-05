@@ -15,7 +15,7 @@ public:
     Player(ePieceColor color);
     void InitPieces(Board& board);
     void UpdateAvailablePositions(Board& board);
-    Position GetKingPosition(void) const;
+    Position GetKingPosition(Board& board) const;
 
 public:
     inline ePieceColor GetColor(void) const

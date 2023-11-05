@@ -10,6 +10,8 @@ void Manager::Init(void)
     std::wcout.imbue(std::locale(""));
     mWhite.InitPieces(mBoard);
     mBlack.InitPieces(mBoard);
+    mWhite.UpdateAvailablePositions(mBoard);
+    mBlack.UpdateAvailablePositions(mBoard);
 }
 
 void Manager::Run(void)
@@ -27,20 +29,18 @@ void Manager::SetupBeforeTurn(void)
     mBoard.Display();
     std::cout << std::endl;
     std::cout << (GetCurrentPlayer().GetColor() == ePieceColor::WHITE ? "백" : "흑") << "의 차례입니다." << std::endl;
-
-    mWhite.UpdateAvailablePositions(mBoard);
-    mBlack.UpdateAvailablePositions(mBoard);
 }
 
 void Manager::MainTurn(void)
 {
     std::string input;
-    std::vector<Position> positions;
+    std::vector<Position> availablePositions;
     Position currentPos;
     Position targetPos;
-    Piece* mSelectedPiece;
 
     while (true) {
+    phase1:
+        Piece* mSelectedPiece;
         std::cout << "움직일 기물의 좌표 : ";
         std::getline(std::cin, input);
 
@@ -61,9 +61,9 @@ void Manager::MainTurn(void)
             continue;
         }
 
-        positions = GetCurrentPlayer().GetPositionMap()[currentPos.ToString()];
+        availablePositions = GetCurrentPlayer().GetPositionMap()[currentPos.ToString()];
 
-        if (positions.empty()) {
+        if (availablePositions.empty()) {
             std::cout << "해당 기물은 현재 움직일 수 없습니다." << std::endl;
             continue;
         }
@@ -80,8 +80,23 @@ void Manager::MainTurn(void)
             continue;
         };
 
-        if (mSelectedPiece->IsValidMove(positions, targetPos)) {
-            mBoard.MovePiece(currentPos, targetPos);
+        if (Position::IsInclude(availablePositions, targetPos)) {
+            if (mState == eStatus::CHECK) {
+                mBoard.MovePiece(currentPos, targetPos);
+                GetCurrentPlayer().UpdateAvailablePositions(mBoard);
+
+                if (IsCheck(GetOpponentPlayer())) {
+                    mBoard.MovePiece(targetPos, currentPos);
+                    GetCurrentPlayer().UpdateAvailablePositions(mBoard);
+                    std::cout << "체크 입니다. 다른 수를 시도하세요" << std::endl;
+                    goto phase1;
+                    continue;
+                }
+
+            } else {
+                mState = eStatus::PLAYING;
+                mBoard.MovePiece(currentPos, targetPos);
+            }
             break;
         } else {
             std::cout << "해당 좌표로 움직일 수 없습니다." << std::endl;
@@ -91,36 +106,33 @@ void Manager::MainTurn(void)
 
 void Manager::CleanupAfterTurn()
 {
-    /* if (IsCheck(mCurrentPlayer)) {
-         std::cout << "체크입니다." << std::endl;
-         mState = eStatus::CHECK;
-     } else {
-         mState = eStatus::PLAYING;
-     }*/
+    GetCurrentPlayer().UpdateAvailablePositions(mBoard);
+
+    if (IsCheck(GetCurrentPlayer())) {
+        std::cout << "체크입니다." << std::endl;
+        mState = eStatus::CHECK;
+    } else {
+        mState = eStatus::PLAYING;
+    }
 
     mTurn++;
     std::cout << "계속하려면 아무키나 누르세요..." << std::endl;
     std::cin.get();
 }
 
-// bool Chess::Manager::IsCheck(ePieceColor currentPlayer)
-//{
-//     ePieceColor opponentColor = currentPlayer == ePieceColor::WHITE ? ePieceColor::BLACK : ePieceColor::WHITE;
-//
-//     /*std::vector<Piece*> alivePieces = mBoard.GetAlivePieces(currentPlayer);*/
-//     std::vector<Piece*> alivePieces = mCurrentPlayer->GetAllPiecesGetAllPieces();
-//     Position opponentKingPos = mBoard.GetKingPosition(opponentColor);
-//
-//     for (auto* piece : alivePieces) {
-//         Position currentPos = mBoard.GetPosition(piece);
-//         std::vector<Position> allPos = piece->GetPossiblePositions(mBoard, currentPos);
-//
-//         for (auto& p : allPos) {
-//             if (p == opponentKingPos) {
-//                 return true;
-//             }
-//         }
-//     }
-//
-//     return false;
-// }
+bool Manager::IsCheck(Player attacker)
+{
+    Player& defender = attacker.GetColor() == ePieceColor::WHITE ? mBlack : mWhite;
+    Position defenderKingPos = defender.GetKingPosition(mBoard);
+    std::unordered_map<std::string, std::vector<Position>> positionMap = attacker.GetPositionMap();
+
+    for (const auto& map : positionMap) {
+        for (const auto& pos : map.second) {
+            if (pos == defenderKingPos) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

@@ -15,6 +15,7 @@ private:
     void SetupBeforeTurn(void);
     void MainTurn(void);
     void CleanupAfterTurn(void);
+    bool IsCheck(Player attacker);
 
 private:
     int mTurn { 1 };
@@ -27,6 +28,11 @@ private:
     inline Player& GetCurrentPlayer(void)
     {
         return mTurn & 1 ? mWhite : mBlack;
+    }
+
+    inline Player& GetOpponentPlayer(void)
+    {
+        return mTurn & 1 ? mBlack : mWhite;
     }
 };
 }
