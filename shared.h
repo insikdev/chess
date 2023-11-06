@@ -20,4 +20,9 @@ enum class eStatus {
     CHECK,
     CHECKMATE,
 };
+
+enum class ePhase {
+    PHASE1,
+    PHASE2,
+};
 }

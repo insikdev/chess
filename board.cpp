@@ -32,6 +32,15 @@ Piece* Board::GetPieceOrNull(const Coordinate& pos)
     return mBoard[pos.GetRow()][pos.GetColumn()];
 }
 
+Piece* Board::GetPieceOrNull(int x, int y)
+{
+    if (x < 0 || x > 7 || y < 0 || y > 7) {
+        return nullptr;
+    }
+
+    return mBoard[x][y];
+}
+
 void Board::SetPiece(const Coordinate& pos, Piece* pPiece)
 {
     mBoard[pos.GetRow()][pos.GetColumn()] = pPiece;
@@ -39,6 +48,11 @@ void Board::SetPiece(const Coordinate& pos, Piece* pPiece)
 
 void Board::MovePiece(const Coordinate& from, const Coordinate& to)
 {
+    mFrom.first = from;
+    mFrom.second = GetPieceOrNull(from);
+    mTo.first = to;
+    mTo.second = GetPieceOrNull(to);
+
     mBoard[to.GetRow()][to.GetColumn()] = mBoard[from.GetRow()][from.GetColumn()];
     mBoard[from.GetRow()][from.GetColumn()] = nullptr;
 }
@@ -54,4 +68,10 @@ Coordinate Board::GetPosition(const Piece* pPiece)
     }
 
     return Coordinate { 0, 0 };
+}
+
+void Board::UndoMove(void)
+{
+    SetPiece(mFrom.first, mFrom.second);
+    SetPiece(mTo.first, mTo.second);
 }

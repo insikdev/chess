@@ -55,6 +55,7 @@
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include="README.md" />
+    <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h">

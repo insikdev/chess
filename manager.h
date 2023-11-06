@@ -11,9 +11,12 @@ public:
     void Run(void);
 
 private:
-    void Setup(void);
     void MainTurn(void);
     void Cleanup(void);
+    bool IsValidStartCoordinate(const Coordinate& start);
+    bool IsCheck(Player& attacker);
+    bool IsCheckMate(Player& attacker);
+    void RenderPiece(int, int, const Coordinate&, std::vector<Coordinate>&);
 
 private:
     int mTurn { 1 };
@@ -23,9 +26,6 @@ private:
     Player mBlack { ePieceColor::BLACK };
 
 private:
-    bool IsValidStartCoordinate(const Coordinate& start);
-    bool IsCheck(Player attacker);
-
     inline Player& GetCurrentPlayer(void)
     {
         return mTurn & 1 ? mWhite : mBlack;
