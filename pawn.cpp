@@ -8,26 +8,30 @@ Pawn::Pawn(ePieceColor color)
 {
 }
 
-std::vector<Position> Pawn::GetPossiblePositions(Board& board, const Position& current)
+std::vector<Coordinate> Pawn::GetPossiblePositions(Board& board, const Coordinate& current)
 {
-    std::vector<Position> possiblePositions;
+    std::vector<Coordinate> possiblePositions;
 
     int forward = (mColor == ePieceColor::WHITE) ? 1 : -1;
 
-    Position forwardOne = Position::Move(current, 0, forward);
-    Position forwardTwo = Position::Move(current, 0, 2 * forward);
-    Position diagonalLeft = Position::Move(current, -1, forward);
-    Position diagonalRight = Position::Move(current, 1, forward);
+    Coordinate forwardOne = Coordinate::Move(current, 0, forward);
+    Coordinate forwardTwo = Coordinate::Move(current, 0, 2 * forward);
+    Coordinate diagonalLeft = Coordinate::Move(current, -1, forward);
+    Coordinate diagonalRight = Coordinate::Move(current, 1, forward);
 
-    if (board.GetPieceOrNull(forwardOne) == nullptr) {
+    Piece* forwardOnePiece = board.GetPieceOrNull(forwardOne);
+    Piece* forwardTwoPiece = board.GetPieceOrNull(forwardTwo);
+
+    if (forwardOnePiece == nullptr) {
         possiblePositions.push_back(forwardOne);
-        if (!mHasMoved && board.GetPieceOrNull(forwardTwo) == nullptr) {
+
+        if (!mHasMoved && forwardTwoPiece == nullptr) {
             possiblePositions.push_back(forwardTwo);
         }
     }
 
-    Piece* diagonalLeftPiece = board.GetPieceOrNull(Position::Move(current, -1, forward));
-    Piece* diagonalRightPiece = board.GetPieceOrNull(Position::Move(current, 1, forward));
+    Piece* diagonalLeftPiece = board.GetPieceOrNull(diagonalLeft);
+    Piece* diagonalRightPiece = board.GetPieceOrNull(diagonalRight);
 
     if (diagonalLeftPiece != nullptr && diagonalLeftPiece->GetColor() != mColor) {
         possiblePositions.push_back(diagonalLeft);

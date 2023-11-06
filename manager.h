@@ -3,7 +3,6 @@
 #include "board.h"
 #include "player.h"
 #include "shared.h"
-#include <unordered_map>
 
 namespace Chess {
 class Manager {
@@ -12,10 +11,9 @@ public:
     void Run(void);
 
 private:
-    void SetupBeforeTurn(void);
+    void Setup(void);
     void MainTurn(void);
-    void CleanupAfterTurn(void);
-    bool IsCheck(Player attacker);
+    void Cleanup(void);
 
 private:
     int mTurn { 1 };
@@ -25,6 +23,9 @@ private:
     Player mBlack { ePieceColor::BLACK };
 
 private:
+    bool IsValidStartCoordinate(const Coordinate& start);
+    bool IsCheck(Player attacker);
+
     inline Player& GetCurrentPlayer(void)
     {
         return mTurn & 1 ? mWhite : mBlack;

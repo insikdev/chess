@@ -8,16 +8,16 @@ King::King(ePieceColor color)
 {
 }
 
-std::vector<Position> King::GetPossiblePositions(Board& board, const Position& current)
+std::vector<Coordinate> King::GetPossiblePositions(Board& board, const Coordinate& current)
 {
-    std::vector<Position> possiblePositions;
+    std::vector<Coordinate> possiblePositions;
 
     int dx[] = { -1, 0, 1, 1, 1, 0, -1, -1 };
     int dy[] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
     for (int i = 0; i < 8; ++i) {
-        Position pos = Position::Move(current, dx[i], dy[i]);
-        if (Position::IsValid(pos)) {
+        Coordinate pos = Coordinate::Move(current, dx[i], dy[i]);
+        if (Coordinate::IsValid(pos)) {
             Piece* piece = board.GetPieceOrNull(pos);
             if (piece == nullptr || piece->GetColor() != mColor) {
                 possiblePositions.push_back(pos);

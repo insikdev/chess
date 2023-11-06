@@ -1,7 +1,7 @@
 #pragma once
 
 #include "board.h"
-#include "position.h"
+#include "coordinate.h"
 #include "shared.h"
 #include <string>
 #include <unordered_map>
@@ -15,7 +15,7 @@ public:
     Player(ePieceColor color);
     void InitPieces(Board& board);
     void UpdateAvailablePositions(Board& board);
-    Position GetKingPosition(Board& board) const;
+    Coordinate GetKingPosition(Board& board) const;
 
 public:
     inline ePieceColor GetColor(void) const
@@ -28,7 +28,7 @@ public:
         return mPieces;
     }
 
-    inline std::unordered_map<std::string, std::vector<Position>> GetPositionMap(void)
+    inline std::unordered_map<std::string, std::vector<Coordinate>> GetPositionMap(void)
     {
         return mPositionMap;
     }
@@ -36,6 +36,6 @@ public:
 private:
     const ePieceColor mColor;
     std::vector<Piece*> mPieces;
-    std::unordered_map<std::string, std::vector<Position>> mPositionMap;
+    std::unordered_map<std::string, std::vector<Coordinate>> mPositionMap;
 };
 }

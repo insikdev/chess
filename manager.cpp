@@ -17,97 +17,80 @@ void Manager::Init(void)
 void Manager::Run(void)
 {
     while (1) {
-        SetupBeforeTurn();
+        Setup();
         MainTurn();
-        CleanupAfterTurn();
+        Cleanup();
     }
 }
 
-void Manager::SetupBeforeTurn(void)
+void Manager::Setup(void)
 {
+
     std::cout << "\033[2J\033[1;1H";
     mBoard.Display();
     std::cout << std::endl;
     std::cout << (GetCurrentPlayer().GetColor() == ePieceColor::WHITE ? "백" : "흑") << "의 차례입니다." << std::endl;
+
+    std::cout << std::cin.get() << std::endl;
 }
 
 void Manager::MainTurn(void)
 {
-    std::string input;
-    std::vector<Position> availablePositions;
-    Position currentPos;
-    Position targetPos;
+    std::vector<Coordinate> availablePositions;
+    Coordinate start;
+    Coordinate destination;
 
     while (true) {
     phase1:
-        Piece* mSelectedPiece;
-        std::cout << "움직일 기물의 좌표 : ";
-        std::getline(std::cin, input);
-
-        if (currentPos.GetPositionFromInput(input) == false) {
-            std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
-            continue;
-        };
-
-        mSelectedPiece = mBoard.GetPieceOrNull(currentPos);
-
-        if (mSelectedPiece == nullptr) {
-            std::cout << "해당 좌표에 기물이 존재하지 않습니다.\n";
-            continue;
+        start = Coordinate::GetCoordinateFromInput("움직일 기물의 좌표 : ");
+        if (!IsValidStartCoordinate(start)) {
+            goto phase1;
         }
 
-        if (mSelectedPiece->GetColor() != GetCurrentPlayer().GetColor()) {
-            std::cout << "내가 소유한 기물이 아닙니다.\n";
-            continue;
-        }
-
-        availablePositions = GetCurrentPlayer().GetPositionMap()[currentPos.ToString()];
+        availablePositions = GetCurrentPlayer().GetPositionMap()[start.ToString()];
 
         if (availablePositions.empty()) {
             std::cout << "해당 기물은 현재 움직일 수 없습니다." << std::endl;
-            continue;
+            goto phase1;
         }
 
-        break;
-    }
-
-    while (true) {
-        std::cout << "기물이 이동할 좌표 : ";
-        std::getline(std::cin, input);
-
-        if (targetPos.GetPositionFromInput(input) == false) {
-            std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
-            continue;
-        };
-
-        if (Position::IsInclude(availablePositions, targetPos)) {
-            if (mState == eStatus::CHECK) {
-                mBoard.MovePiece(currentPos, targetPos);
-                GetCurrentPlayer().UpdateAvailablePositions(mBoard);
-
-                if (IsCheck(GetOpponentPlayer())) {
-                    mBoard.MovePiece(targetPos, currentPos);
-                    GetCurrentPlayer().UpdateAvailablePositions(mBoard);
-                    std::cout << "체크 입니다. 다른 수를 시도하세요" << std::endl;
-                    goto phase1;
-                    continue;
-                }
-
-            } else {
-                mState = eStatus::PLAYING;
-                mBoard.MovePiece(currentPos, targetPos);
+        { // print all coordinate
+            for (auto& p : availablePositions) {
+                std::cout << p << ' ';
             }
-            break;
-        } else {
+            std::cout << std::endl;
+        }
+
+    phase2:
+        destination = Coordinate::GetCoordinateFromInput("기물이 이동할 좌표 : ");
+
+        if (!Coordinate::IsInclude(availablePositions, destination)) {
             std::cout << "해당 좌표로 움직일 수 없습니다." << std::endl;
+            goto phase2;
+        }
+
+        mBoard.MovePiece(start, destination);
+        mWhite.UpdateAvailablePositions(mBoard);
+        mBlack.UpdateAvailablePositions(mBoard);
+
+        if (mState == eStatus::CHECK && IsCheck(GetOpponentPlayer())) {
+            mBoard.MovePiece(destination, start);
+            mWhite.UpdateAvailablePositions(mBoard);
+            mBlack.UpdateAvailablePositions(mBoard);
+            std::cout << "체크 입니다. 다른 수를 시도하세요" << std::endl;
+            goto phase1;
+        } else {
+            goto finish;
         }
     }
+
+finish:
+    mState = eStatus::PLAYING;
+    mBoard.GetPieceOrNull(destination)->HandleMove();
 }
 
-void Manager::CleanupAfterTurn()
+void Manager::Cleanup()
 {
-    GetCurrentPlayer().UpdateAvailablePositions(mBoard);
-
     if (IsCheck(GetCurrentPlayer())) {
         std::cout << "체크입니다." << std::endl;
         mState = eStatus::CHECK;
@@ -123,8 +106,8 @@ void Manager::CleanupAfterTurn()
 bool Manager::IsCheck(Player attacker)
 {
     Player& defender = attacker.GetColor() == ePieceColor::WHITE ? mBlack : mWhite;
-    Position defenderKingPos = defender.GetKingPosition(mBoard);
-    std::unordered_map<std::string, std::vector<Position>> positionMap = attacker.GetPositionMap();
+    Coordinate defenderKingPos = defender.GetKingPosition(mBoard);
+    std::unordered_map<std::string, std::vector<Coordinate>> positionMap = attacker.GetPositionMap();
 
     for (const auto& map : positionMap) {
         for (const auto& pos : map.second) {
@@ -135,4 +118,21 @@ bool Manager::IsCheck(Player attacker)
     }
 
     return false;
+}
+
+bool Manager::IsValidStartCoordinate(const Coordinate& start)
+{
+    Piece* piece = mBoard.GetPieceOrNull(start);
+
+    if (piece == nullptr) {
+        std::cout << "해당 좌표에 기물이 존재하지 않습니다.\n";
+        return false;
+    }
+
+    if (piece->GetColor() != GetCurrentPlayer().GetColor()) {
+        std::cout << "내가 소유한 기물이 아닙니다.\n";
+        return false;
+    }
+
+    return true;
 }

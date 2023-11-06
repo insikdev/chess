@@ -1,6 +1,6 @@
 #pragma once
 
-#include "position.h"
+#include "coordinate.h"
 #include "shared.h"
 #include <vector>
 
@@ -10,7 +10,7 @@ class Board;
 class Piece {
 public:
     Piece(ePieceType type, ePieceColor color, wchar_t unicodePoint);
-    virtual std::vector<Position> GetPossiblePositions(Board& board, const Position& current) = 0;
+    virtual std::vector<Coordinate> GetPossiblePositions(Board& board, const Coordinate& current) = 0;
 
 public:
     inline ePieceType GetType() const
@@ -26,6 +26,11 @@ public:
     inline wchar_t GetUnicodePoint() const
     {
         return mUnicodePoint;
+    }
+
+    inline void HandleMove()
+    {
+        mHasMoved = true;
     }
 
 protected:

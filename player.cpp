@@ -21,19 +21,19 @@ void Player::InitPieces(Board& board)
     const char pawnRank = mColor == ePieceColor::WHITE ? '2' : '7';
     const char backRank = mColor == ePieceColor::WHITE ? '1' : '8';
 
-    std::vector<std::pair<Position, Piece*>> pieces;
-    // for (char i = 0; i < 8; ++i) {
-    //     pieces.push_back(std::make_pair(Position { 'a' + i, pawnRank }, new Pawn { mColor }));
-    // }
+    std::vector<std::pair<Coordinate, Piece*>> pieces;
+    for (char i = 0; i < 8; ++i) {
+        pieces.push_back(std::make_pair(Coordinate { 'a' + i, pawnRank }, new Pawn { mColor }));
+    }
 
-    pieces.push_back(std::make_pair(Position { 'a', backRank }, new Rook { mColor }));
-    pieces.push_back(std::make_pair(Position { 'b', backRank }, new Knight { mColor }));
-    pieces.push_back(std::make_pair(Position { 'c', backRank }, new Bishop { mColor }));
-    pieces.push_back(std::make_pair(Position { 'd', backRank }, new Queen { mColor }));
-    pieces.push_back(std::make_pair(Position { 'e', backRank }, new King { mColor }));
-    pieces.push_back(std::make_pair(Position { 'f', backRank }, new Bishop { mColor }));
-    pieces.push_back(std::make_pair(Position { 'g', backRank }, new Knight { mColor }));
-    pieces.push_back(std::make_pair(Position { 'h', backRank }, new Rook { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'a', backRank }, new Rook { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'b', backRank }, new Knight { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'c', backRank }, new Bishop { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'd', backRank }, new Queen { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'e', backRank }, new King { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'f', backRank }, new Bishop { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'g', backRank }, new Knight { mColor }));
+    pieces.push_back(std::make_pair(Coordinate { 'h', backRank }, new Rook { mColor }));
 
     for (const auto& p : pieces) {
         board.SetPiece(p.first, p.second);
@@ -41,7 +41,7 @@ void Player::InitPieces(Board& board)
     }
 }
 
-Position Player::GetKingPosition(Board& board) const
+Coordinate Player::GetKingPosition(Board& board) const
 {
     for (auto* p : mPieces) {
         if (p->GetType() == ePieceType::KING) {
@@ -49,7 +49,7 @@ Position Player::GetKingPosition(Board& board) const
         }
     }
 
-    return Position {};
+    return Coordinate {};
 }
 
 void Player::UpdateAvailablePositions(Board& board)
@@ -57,7 +57,7 @@ void Player::UpdateAvailablePositions(Board& board)
     mPositionMap.clear();
 
     for (auto* piece : mPieces) {
-        Position currentPos = board.GetPosition(piece);
+        Coordinate currentPos = board.GetPosition(piece);
         mPositionMap[currentPos.ToString()] = piece->GetPossiblePositions(board, currentPos);
     }
 }

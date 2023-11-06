@@ -136,7 +136,7 @@
     <ClCompile Include="pawn.cpp" />
     <ClCompile Include="piece.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="position.cpp" />
+    <ClCompile Include="coordinate.cpp" />
     <ClCompile Include="queen.cpp" />
     <ClCompile Include="rook.cpp" />
   </ItemGroup>
@@ -153,7 +153,7 @@
     <ClInclude Include="pawn.h" />
     <ClInclude Include="piece.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="position.h" />
+    <ClInclude Include="coordinate.h" />
     <ClInclude Include="queen.h" />
     <ClInclude Include="rook.h" />
     <ClInclude Include="shared.h" />
