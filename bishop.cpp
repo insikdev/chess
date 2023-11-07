@@ -1,5 +1,4 @@
 #include "bishop.h"
-#include "board.h"
 
 using namespace Chess;
 
@@ -8,31 +7,31 @@ Bishop::Bishop(ePieceColor color)
 {
 }
 
-std::vector<Coordinate> Bishop::GetPossiblePositions(Board& board, const Coordinate& current)
+std::vector<Coordinate> Bishop::GetAllPossibleMoves(Board& board, const Coordinate& currentCoord)
 {
-    std::vector<Coordinate> possiblePositions;
+    std::vector<Coordinate> possibleCoords;
 
     int dx[] = { 1, -1, 1, -1 };
     int dy[] = { 1, 1, -1, -1 };
 
     for (int i = 0; i < 4; ++i) {
-        Coordinate pos = Coordinate::Move(current, dx[i], dy[i]);
+        Coordinate coord = Coordinate::Move(currentCoord, dx[i], dy[i]);
 
-        while (Coordinate::IsValid(pos)) {
-            Piece* piece = board.GetPieceOrNull(pos);
+        while (Coordinate::IsValid(coord)) {
+            Piece* piece = board.GetPieceOrNull(coord);
 
             if (piece == nullptr) {
-                possiblePositions.push_back(pos);
-                pos = Coordinate::Move(pos, dx[i], dy[i]);
+                possibleCoords.push_back(coord);
+                coord = Coordinate::Move(coord, dx[i], dy[i]);
                 continue;
             } else {
                 if (piece->GetColor() != mColor) {
-                    possiblePositions.push_back(pos);
+                    possibleCoords.push_back(coord);
                 }
                 break;
             }
         }
     }
 
-    return possiblePositions;
+    return possibleCoords;
 }

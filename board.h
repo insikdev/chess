@@ -8,11 +8,10 @@ class Piece;
 
 class Board {
 public:
-    // void Display(void) const;
-    Piece* GetPieceOrNull(const Coordinate& pos);
-    Piece* GetPieceOrNull(int x, int y);
-    void SetPiece(const Coordinate& pos, Piece* pPiece);
-    Coordinate GetPosition(const Piece* pPiece);
+    void Display(void) const;
+    Piece* GetPieceOrNull(const Coordinate&) const;
+    Coordinate GetCoord(const Piece*) const;
+    void SetPiece(const Coordinate&, Piece*);
     void MovePiece(const Coordinate& from, const Coordinate& to);
     void UndoMove(void);
 

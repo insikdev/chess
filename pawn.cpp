@@ -1,5 +1,4 @@
 #include "pawn.h"
-#include "board.h"
 
 using namespace Chess;
 
@@ -8,25 +7,25 @@ Pawn::Pawn(ePieceColor color)
 {
 }
 
-std::vector<Coordinate> Pawn::GetPossiblePositions(Board& board, const Coordinate& current)
+std::vector<Coordinate> Pawn::GetAllPossibleMoves(Board& board, const Coordinate& currentCoord)
 {
-    std::vector<Coordinate> possiblePositions;
+    std::vector<Coordinate> possibleCoords;
 
     int forward = (mColor == ePieceColor::WHITE) ? 1 : -1;
 
-    Coordinate forwardOne = Coordinate::Move(current, 0, forward);
-    Coordinate forwardTwo = Coordinate::Move(current, 0, 2 * forward);
-    Coordinate diagonalLeft = Coordinate::Move(current, -1, forward);
-    Coordinate diagonalRight = Coordinate::Move(current, 1, forward);
+    Coordinate forwardOne = Coordinate::Move(currentCoord, 0, forward);
+    Coordinate forwardTwo = Coordinate::Move(currentCoord, 0, 2 * forward);
+    Coordinate diagonalLeft = Coordinate::Move(currentCoord, -1, forward);
+    Coordinate diagonalRight = Coordinate::Move(currentCoord, 1, forward);
 
     Piece* forwardOnePiece = board.GetPieceOrNull(forwardOne);
     Piece* forwardTwoPiece = board.GetPieceOrNull(forwardTwo);
 
     if (forwardOnePiece == nullptr) {
-        possiblePositions.push_back(forwardOne);
+        possibleCoords.push_back(forwardOne);
 
         if (!mHasMoved && forwardTwoPiece == nullptr) {
-            possiblePositions.push_back(forwardTwo);
+            possibleCoords.push_back(forwardTwo);
         }
     }
 
@@ -34,12 +33,12 @@ std::vector<Coordinate> Pawn::GetPossiblePositions(Board& board, const Coordinat
     Piece* diagonalRightPiece = board.GetPieceOrNull(diagonalRight);
 
     if (diagonalLeftPiece != nullptr && diagonalLeftPiece->GetColor() != mColor) {
-        possiblePositions.push_back(diagonalLeft);
+        possibleCoords.push_back(diagonalLeft);
     }
 
     if (diagonalRightPiece != nullptr && diagonalRightPiece->GetColor() != mColor) {
-        possiblePositions.push_back(diagonalRight);
+        possibleCoords.push_back(diagonalRight);
     }
 
-    return possiblePositions;
+    return possibleCoords;
 }

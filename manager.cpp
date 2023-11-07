@@ -23,7 +23,8 @@ void Manager::Run(void)
         HandleInput(getch());
     }
 
-    std::cout << "game end" << std::endl;
+    mBoard.Display();
+    std::cout << "\nCheckmate. End game" << std::endl;
 }
 
 void Manager::HandleInput(int ch)
@@ -63,7 +64,7 @@ void Manager::HandleInput(int ch)
             if (IsValidStartCoordinate(mCurrentCoord)) {
                 mSelectCoord = mCurrentCoord;
                 Piece* piece = mBoard.GetPieceOrNull(mSelectCoord);
-                mAvailablePositions = piece->GetPossiblePositions(mBoard, mSelectCoord);
+                mAvailablePositions = piece->GetAllPossibleMoves(mBoard, mSelectCoord);
                 mInfo = "Select " + mCurrentCoord.ToString() + " " + piece->GetTypeToString();
             } else {
                 // 좌표가 올바르지 않음
@@ -88,19 +89,20 @@ void Manager::HandleInput(int ch)
 
             // 성공적으로 이동을 마침
             mInfo = "Move to " + mCurrentCoord.ToString();
+            mBoard.GetPieceOrNull(mCurrentCoord)->HandleMove();
 
             if (IsCheck(GetCurrentPlayer())) {
                 mInfo += " Check";
                 if (IsCheckmate(GetCurrentPlayer())) {
                     mInfo = "Checkmate";
                     mState = eStatus::CHECKMATE;
-                    break;
                 }
             }
 
             mSelectCoord = Coordinate { 0, 0 };
             mAvailablePositions.clear();
             mTurn++;
+
         } else {
             // 이동할 수 없는 좌표를 선택
             mInfo = "Can't Move";
@@ -112,10 +114,6 @@ void Manager::HandleInput(int ch)
         mSelectCoord = Coordinate { 0, 0 };
         mAvailablePositions.clear();
         mInfo.clear();
-        break;
-    }
-    case 'q': {
-        endwin(); // ncurses 종료
         break;
     }
     }

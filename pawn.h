@@ -6,6 +6,6 @@ namespace Chess {
 class Pawn : public Piece {
 public:
     Pawn(ePieceColor);
-    std::vector<Coordinate> GetPossiblePositions(Board& board, const Coordinate& current) override final;
+    std::vector<Coordinate> GetAllPossibleMoves(Board&, const Coordinate&) override final;
 };
 }

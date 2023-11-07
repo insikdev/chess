@@ -16,6 +16,13 @@ Player::Player(ePieceColor color)
     mPieces.reserve(16);
 }
 
+Player::~Player()
+{
+    for (Piece* pPiece : mPieces) {
+        free(pPiece);
+    }
+}
+
 void Player::InitPieces(Board& board)
 {
     const char pawnRank = mColor == ePieceColor::WHITE ? '2' : '7';
@@ -23,7 +30,7 @@ void Player::InitPieces(Board& board)
 
     std::vector<std::pair<Coordinate, Piece*>> pieces;
     for (char i = 0; i < 8; ++i) {
-        // pieces.push_back(std::make_pair(Coordinate { 'a' + i, pawnRank }, new Pawn { mColor }));
+        pieces.push_back(std::make_pair(Coordinate { 'a' + i, pawnRank }, new Pawn { mColor }));
     }
 
     pieces.push_back(std::make_pair(Coordinate { 'a', backRank }, new Rook { mColor }));
@@ -45,7 +52,7 @@ Coordinate Player::GetKingPosition(Board& board) const
 {
     for (auto* p : mPieces) {
         if (p->GetType() == ePieceType::KING) {
-            return board.GetPosition(p);
+            return board.GetCoord(p);
         }
     }
 
@@ -57,7 +64,7 @@ void Player::UpdateAvailablePositions(Board& board)
     mPositionMap.clear();
 
     for (Piece* piece : mPieces) {
-        Coordinate currentPos = board.GetPosition(piece);
-        mPositionMap[currentPos] = piece->GetPossiblePositions(board, currentPos);
+        Coordinate currentPos = board.GetCoord(piece);
+        mPositionMap[currentPos] = piece->GetAllPossibleMoves(board, currentPos);
     }
 }

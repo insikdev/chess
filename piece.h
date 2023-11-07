@@ -1,17 +1,16 @@
 #pragma once
 
+#include "board.h"
 #include "coordinate.h"
 #include "shared.h"
 #include <unordered_map>
 #include <vector>
 
 namespace Chess {
-class Board;
-
 class Piece {
 public:
-    Piece(ePieceType type, ePieceColor color, wchar_t unicodePoint);
-    virtual std::vector<Coordinate> GetPossiblePositions(Board& board, const Coordinate& current) = 0;
+    Piece(ePieceType, ePieceColor, wchar_t);
+    virtual std::vector<Coordinate> GetAllPossibleMoves(Board&, const Coordinate&) = 0;
 
 public:
     inline ePieceType GetType() const
@@ -21,7 +20,7 @@ public:
 
     inline std::string GetTypeToString() const
     {
-        std::unordered_map<ePieceType, std::string> map = {
+        std::unordered_map<ePieceType, std::string> types = {
             { ePieceType::BISHOP, "Bishop" },
             { ePieceType::KING, "King" },
             { ePieceType::KNIGHT, "Knight" },
@@ -30,7 +29,7 @@ public:
             { ePieceType::ROOK, "Rook" }
         };
 
-        return map[mType];
+        return types[mType];
     }
 
     inline ePieceColor GetColor() const

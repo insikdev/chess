@@ -13,6 +13,7 @@ class Piece;
 class Player {
 public:
     Player(ePieceColor color);
+    ~Player();
     void InitPieces(Board& board);
     void UpdateAvailablePositions(Board& board);
     Coordinate GetKingPosition(Board& board) const;

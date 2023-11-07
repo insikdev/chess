@@ -5,25 +5,25 @@
 
 using namespace Chess;
 
-// void Board::Display(void) const
-//{
-//     for (int i = 0; i < 8; ++i) {
-//         std::wcout << 8 - i << L'\u2009';
-//
-//         for (int j = 0; j < 8; ++j) {
-//             if (mBoard[i][j]) {
-//                 std::wcout << mBoard[i][j]->GetUnicodePoint();
-//             } else {
-//                 std::cout << ' ';
-//             }
-//             std::wcout << " ";
-//         }
-//         std::cout << std::endl;
-//     }
-//     std::cout << "  a b c d e f g h" << std::endl;
-// }
+void Board::Display(void) const
+{
+    for (int i = 0; i < 8; ++i) {
+        std::wcout << 8 - i << L'\u2009';
 
-Piece* Board::GetPieceOrNull(const Coordinate& coord)
+        for (int j = 0; j < 8; ++j) {
+            if (mBoard[i][j]) {
+                std::wcout << mBoard[i][j]->GetUnicodePoint();
+            } else {
+                std::cout << '.';
+            }
+            std::cout << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "  a b c d e f g h" << std::endl;
+}
+
+Piece* Board::GetPieceOrNull(const Coordinate& coord) const
 {
     if (!Coordinate::IsValid(coord)) {
         return nullptr;
@@ -32,13 +32,17 @@ Piece* Board::GetPieceOrNull(const Coordinate& coord)
     return mBoard[coord.GetRow()][coord.GetColumn()];
 }
 
-Piece* Board::GetPieceOrNull(int x, int y)
+Coordinate Board::GetCoord(const Piece* pPiece) const
 {
-    if (x < 0 || x > 7 || y < 0 || y > 7) {
-        return nullptr;
+    for (char i = 0; i < BOARD_SIZE; ++i) {
+        for (char j = 0; j < BOARD_SIZE; ++j) {
+            if (mBoard[i][j] == pPiece) {
+                return Coordinate { 'a' + j, '8' - i };
+            }
+        }
     }
 
-    return mBoard[x][y];
+    return Coordinate { 0, 0 };
 }
 
 void Board::SetPiece(const Coordinate& coord, Piece* pPiece)
@@ -55,19 +59,6 @@ void Board::MovePiece(const Coordinate& from, const Coordinate& to)
 
     mBoard[to.GetRow()][to.GetColumn()] = mBoard[from.GetRow()][from.GetColumn()];
     mBoard[from.GetRow()][from.GetColumn()] = nullptr;
-}
-
-Coordinate Board::GetPosition(const Piece* pPiece)
-{
-    for (char i = 0; i < 8; ++i) {
-        for (char j = 0; j < 8; ++j) {
-            if (mBoard[i][j] == pPiece) {
-                return Coordinate { 'a' + j, '8' - i };
-            }
-        }
-    }
-
-    return Coordinate { 0, 0 };
 }
 
 void Board::UndoMove(void)

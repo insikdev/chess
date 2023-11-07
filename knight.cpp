@@ -1,5 +1,4 @@
 #include "knight.h"
-#include "board.h"
 
 using namespace Chess;
 
@@ -8,23 +7,23 @@ Knight::Knight(ePieceColor color)
 {
 }
 
-std::vector<Coordinate> Knight::GetPossiblePositions(Board& board, const Coordinate& current)
+std::vector<Coordinate> Knight::GetAllPossibleMoves(Board& board, const Coordinate& currentCoord)
 {
-    std::vector<Coordinate> possiblePositions;
+    std::vector<Coordinate> possibleCoords;
 
     int dx[] = { 1, 1, -1, -1, 2, 2, -2, -2 };
     int dy[] = { 2, -2, 2, -2, 1, -1, 1, -1 };
 
     for (int i = 0; i < 8; ++i) {
-        Coordinate pos = Coordinate::Move(current, dx[i], dy[i]);
+        Coordinate coord = Coordinate::Move(currentCoord, dx[i], dy[i]);
 
-        if (Coordinate::IsValid(pos)) {
-            Piece* piece = board.GetPieceOrNull(pos);
+        if (Coordinate::IsValid(coord)) {
+            Piece* piece = board.GetPieceOrNull(coord);
             if (piece == nullptr || piece->GetColor() != mColor) {
-                possiblePositions.push_back(pos);
+                possibleCoords.push_back(coord);
             }
         }
     }
 
-    return possiblePositions;
+    return possibleCoords;
 }

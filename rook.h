@@ -6,6 +6,6 @@ namespace Chess {
 class Rook : public Piece {
 public:
     Rook(ePieceColor);
-    std::vector<Coordinate> GetPossiblePositions(Board& board, const Coordinate& current) override final;
+    std::vector<Coordinate> GetAllPossibleMoves(Board&, const Coordinate&) override final;
 };
 }
