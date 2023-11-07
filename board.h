@@ -8,7 +8,7 @@ class Piece;
 
 class Board {
 public:
-    void Display(void) const;
+    // void Display(void) const;
     Piece* GetPieceOrNull(const Coordinate& pos);
     Piece* GetPieceOrNull(int x, int y);
     void SetPiece(const Coordinate& pos, Piece* pPiece);
@@ -17,7 +17,10 @@ public:
     void UndoMove(void);
 
 public:
-    Piece* mBoard[8][8] {};
+    const enum { BOARD_SIZE = 8 };
+
+private:
+    Piece* mBoard[BOARD_SIZE][BOARD_SIZE] {};
     std::pair<Coordinate, Piece*> mFrom;
     std::pair<Coordinate, Piece*> mTo;
 };

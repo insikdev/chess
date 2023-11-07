@@ -23,7 +23,7 @@ void Player::InitPieces(Board& board)
 
     std::vector<std::pair<Coordinate, Piece*>> pieces;
     for (char i = 0; i < 8; ++i) {
-        pieces.push_back(std::make_pair(Coordinate { 'a' + i, pawnRank }, new Pawn { mColor }));
+        // pieces.push_back(std::make_pair(Coordinate { 'a' + i, pawnRank }, new Pawn { mColor }));
     }
 
     pieces.push_back(std::make_pair(Coordinate { 'a', backRank }, new Rook { mColor }));
@@ -56,8 +56,8 @@ void Player::UpdateAvailablePositions(Board& board)
 {
     mPositionMap.clear();
 
-    for (auto* piece : mPieces) {
+    for (Piece* piece : mPieces) {
         Coordinate currentPos = board.GetPosition(piece);
-        mPositionMap[currentPos.ToString()] = piece->GetPossiblePositions(board, currentPos);
+        mPositionMap[currentPos] = piece->GetPossiblePositions(board, currentPos);
     }
 }

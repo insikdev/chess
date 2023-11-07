@@ -5,31 +5,31 @@
 
 using namespace Chess;
 
-void Board::Display(void) const
-{
-    for (int i = 0; i < 8; ++i) {
-        std::wcout << 8 - i << L'\u2009';
+// void Board::Display(void) const
+//{
+//     for (int i = 0; i < 8; ++i) {
+//         std::wcout << 8 - i << L'\u2009';
+//
+//         for (int j = 0; j < 8; ++j) {
+//             if (mBoard[i][j]) {
+//                 std::wcout << mBoard[i][j]->GetUnicodePoint();
+//             } else {
+//                 std::cout << ' ';
+//             }
+//             std::wcout << " ";
+//         }
+//         std::cout << std::endl;
+//     }
+//     std::cout << "  a b c d e f g h" << std::endl;
+// }
 
-        for (int j = 0; j < 8; ++j) {
-            if (mBoard[i][j]) {
-                std::wcout << mBoard[i][j]->GetUnicodePoint();
-            } else {
-                std::cout << ' ';
-            }
-            std::wcout << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "  a b c d e f g h" << std::endl;
-}
-
-Piece* Board::GetPieceOrNull(const Coordinate& pos)
+Piece* Board::GetPieceOrNull(const Coordinate& coord)
 {
-    if (!Coordinate::IsValid(pos)) {
+    if (!Coordinate::IsValid(coord)) {
         return nullptr;
     }
 
-    return mBoard[pos.GetRow()][pos.GetColumn()];
+    return mBoard[coord.GetRow()][coord.GetColumn()];
 }
 
 Piece* Board::GetPieceOrNull(int x, int y)
@@ -41,9 +41,9 @@ Piece* Board::GetPieceOrNull(int x, int y)
     return mBoard[x][y];
 }
 
-void Board::SetPiece(const Coordinate& pos, Piece* pPiece)
+void Board::SetPiece(const Coordinate& coord, Piece* pPiece)
 {
-    mBoard[pos.GetRow()][pos.GetColumn()] = pPiece;
+    mBoard[coord.GetRow()][coord.GetColumn()] = pPiece;
 }
 
 void Board::MovePiece(const Coordinate& from, const Coordinate& to)

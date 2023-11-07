@@ -2,6 +2,7 @@
 
 #include "coordinate.h"
 #include "shared.h"
+#include <unordered_map>
 #include <vector>
 
 namespace Chess {
@@ -16,6 +17,20 @@ public:
     inline ePieceType GetType() const
     {
         return mType;
+    }
+
+    inline std::string GetTypeToString() const
+    {
+        std::unordered_map<ePieceType, std::string> map = {
+            { ePieceType::BISHOP, "Bishop" },
+            { ePieceType::KING, "King" },
+            { ePieceType::KNIGHT, "Knight" },
+            { ePieceType::PAWN, "Pawn" },
+            { ePieceType::QUEEN, "Queen" },
+            { ePieceType::ROOK, "Rook" }
+        };
+
+        return map[mType];
     }
 
     inline ePieceColor GetColor() const

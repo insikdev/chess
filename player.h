@@ -28,7 +28,7 @@ public:
         return mPieces;
     }
 
-    inline std::unordered_map<std::string, std::vector<Coordinate>> GetPositionMap(void)
+    inline std::unordered_map<Coordinate, std::vector<Coordinate>, Coordinate> GetPositionMap(void)
     {
         return mPositionMap;
     }
@@ -36,6 +36,6 @@ public:
 private:
     const ePieceColor mColor;
     std::vector<Piece*> mPieces;
-    std::unordered_map<std::string, std::vector<Coordinate>> mPositionMap;
+    std::unordered_map<Coordinate, std::vector<Coordinate>, Coordinate> mPositionMap;
 };
 }

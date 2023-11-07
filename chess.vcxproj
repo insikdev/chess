@@ -147,6 +147,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="coordinate.cpp" />
     <ClCompile Include="queen.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rook.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="coordinate.h" />
     <ClInclude Include="queen.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="rook.h" />
     <ClInclude Include="shared.h" />
   </ItemGroup>

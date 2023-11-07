@@ -2,6 +2,7 @@
 
 #include "board.h"
 #include "player.h"
+#include "renderer.h"
 #include "shared.h"
 
 namespace Chess {
@@ -11,16 +12,19 @@ public:
     void Run(void);
 
 private:
-    void MainTurn(void);
-    void Cleanup(void);
+    void HandleInput(int ch);
     bool IsValidStartCoordinate(const Coordinate& start);
     bool IsCheck(Player& attacker);
-    bool IsCheckMate(Player& attacker);
-    void RenderPiece(int, int, const Coordinate&, std::vector<Coordinate>&);
+    bool IsCheckmate(Player& attacker);
 
 private:
     int mTurn { 1 };
+    std::string mInfo;
+    std::vector<Coordinate> mAvailablePositions;
+    Coordinate mCurrentCoord { 'a', '1' };
+    Coordinate mSelectCoord {};
     Board mBoard;
+    Renderer mRenderer;
     eStatus mState { eStatus::PLAYING };
     Player mWhite { ePieceColor::WHITE };
     Player mBlack { ePieceColor::BLACK };
